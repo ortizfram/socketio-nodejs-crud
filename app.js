@@ -9,7 +9,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new WebSocketServer(server); // server para trabajar con sockets
 
-const notes = [];
+let notes = [];
 
 // templates
 app.use(express.static(__dirname + "/public")); //pasar archivos js a plantillas
@@ -22,7 +22,7 @@ io.on("connection", (socket) => {
   //socket: traer info de cliente
   console.log("cliente conectado", socket.id);
 
-  socket.emit("server:loadnotes", notes)
+  socket.emit("server:loadnotes", notes);
 
   // test
   socket.emit("ping");
@@ -36,7 +36,33 @@ io.on("connection", (socket) => {
     };
     console.log(note);
     notes.push(note);
-    socket.emit("server:newnote", note)
+    io.emit("server:newnote", note);
+  });
+
+  // client:deletenote
+  socket.on("client:deletenote", (noteId) => {
+    notes = notes.filter((note) => note.id !== noteId);
+    io.emit("server:loadnotes", notes);
+  });
+
+  // client:getnote
+  socket.on("client:getnote", (noteId) => {
+    const note = notes.find((note) => note.id == noteId);
+    socket.emit("server:selectednote", note);
+  });
+
+  // client:updatenote
+  socket.on("client:updatenote", (updatedNote) => {
+    console.log(updatedNote)
+    notes = 
+    notes.map((note) => {
+      if (note.id == updatedNote.id) {
+        note.title = updatedNote.title;
+        note.description = updatedNote.description;
+      }
+      return note;
+    });
+    io.emit("server:loadnotes", notes);
   });
 });
 

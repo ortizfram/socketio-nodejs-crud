@@ -1,6 +1,36 @@
 <!-- server/views/index.handlebars -->
 
-<h1>Listo para sockets</h1>
+<div class="container h-100">
+  <div class="row">
+    <div class="col-md-4 my-auto">
+      <form class="card card-body rounded-0" id="noteForm">
+        <h1 class="h3 mb-5">Add note</h1>
+        <input
+          type="text"
+          name="title"
+          id="title"
+          placeholder="write a title"
+          class="form-control rounded-0 mb-3"
+          autofocus
+        />
+      <textarea
+        name="description"
+        id="description"
+        rows="2"
+        class="form-control rouded-0 mb-3"
+        placeholder="write a description"
+      ></textarea>
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="/js/socket-cliente.js"></script>
+      <button class="btn btn-dark rounded-0">send</button>
+      </form>
+    </div>
+    <div class="col-md-8">
+      <div id="notes">notes</div>
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.min.js"></script>
+<script src="/js/ui.js"></script>
+<script src="/js/socket.js"></script>
+<script src="/js/main.js"></script>
